@@ -31,7 +31,7 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
      */
     public function extendWith(Menu $menu)
     {
-        $menu->group(trans('core::sidebar.content'), function (Group $group) {
+        $menu->group(config('asgard.attribute.config.sidebar-group', trans('core::sidebar.content')), function (Group $group) {
             $group->item(trans('attribute::attributes.attributes'), function (Item $item) {
                 $item->icon('fa fa-hashtag');
                 $item->weight(0);
