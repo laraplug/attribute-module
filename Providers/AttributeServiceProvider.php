@@ -17,6 +17,7 @@ use Modules\Attribute\Types\MultiSelectType;
 use Modules\Attribute\Types\RadioType;
 use Modules\Attribute\Types\SelectType;
 use Modules\Attribute\Types\TextareaType;
+use Modules\Core\Events\LoadingBackendTranslations;
 use Modules\Core\Traits\CanPublishConfiguration;
 
 class AttributeServiceProvider extends ServiceProvider
@@ -51,6 +52,12 @@ class AttributeServiceProvider extends ServiceProvider
 
         $this->app->bind('attribute.attributes.directive', function ($app) {
             return new AttributesDirective($app[AttributeRepository::class], $app[AttributesManager::class]);
+        });
+
+        $this->app['events']->listen(LoadingBackendTranslations::class, function (LoadingBackendTranslations $event) {
+            $event->load('attributes', array_dot(trans('attribute::attributes')));
+            // append translations
+
         });
     }
 
