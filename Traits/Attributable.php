@@ -2,6 +2,8 @@
 
 namespace Modules\Attribute\Traits;
 
+use Illuminate\Support\Facades\Lang;
+
 use Illuminate\Database\Eloquent\Model;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Attribute\Entities\Attribute;
@@ -236,7 +238,7 @@ trait Attributable
                     'is_system' => true,
                 ];
                 foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-                    $attributeData[$locale]['name'] = $slug;
+                    $attributeData[$locale]['name'] = $config->has('name') && Lang::has($config->has('name'), $locale) ? trans($config->has('name'), [], $locale) : $slug;
                 }
                 $attribute = new Attribute($attributeData);
                 $attribute->save();
@@ -245,15 +247,10 @@ trait Attributable
             // Save Options
             if($options = $config->get('options')) {
                 $optionData = [];
-                foreach ($options as $key => $value) {
-                    if(is_string($value)) {
-                        $key = $value;
-                        $value = [];
-                    }
-                    $optionData[$key] = $value;
+                foreach ($options as $key => $label) {
+                    if(is_int($key)) $key = $label;
                     foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-                        if(!isset($optionData[$key][$locale]))
-                            $optionData[$key][$locale]['label'] = $key;
+                        $optionData[$key][$locale]['label'] = Lang::has($label, $locale) ? trans($label, [], $locale) : $label;
                     }
                 }
                 $attribute->setOptions($optionData);
