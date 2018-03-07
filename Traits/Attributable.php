@@ -53,7 +53,7 @@ trait Attributable
      */
     public function attributes()
     {
-        return static::createAttributesModel()->where('namespace', $this->getEntityNamespace())
+        return $this->hasMany(static::$attributesModel, 'namespace', 'type')
                 ->with(['values' => function($query) {
                     $query->where('entity_type', static::class);
                     $query->where('entity_id', static::getKey());
@@ -245,10 +245,13 @@ trait Attributable
             }
 
             // Save Options
-            if($options = $config->get('options')) {
+            if(is_array($config->get('options'))) {
                 $optionData = [];
-                foreach ($options as $key => $label) {
+                $options = $attribute->options->keyBy('slug');
+                foreach ($config->get('options') as $key => $label) {
                     if(is_int($key)) $key = $label;
+                    // Don't save if exists
+                    if(isset($options[$key])) continue;
                     foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
                         $optionData[$key][$locale]['label'] = Lang::has($label, $locale) ? trans($label, [], $locale) : $label;
                     }
