@@ -1,3 +1,10 @@
+[![Latest Stable Version](https://poser.pugx.org/laraplug/attribute-module/v/stable.svg?format=flat-square)](https://github.com/laraplug/attribute-module/releases)
+[![Software License](https://poser.pugx.org/laraplug/attribute-module/license.svg?format=flat-square)](LICENSE)
+[![Daily Downloads](https://poser.pugx.org/laraplug/attribute-module/d/daily.svg?format=flat-square)](https://packagist.org/packages/laraplug/attribute-module)
+[![Monthly Downloads](https://poser.pugx.org/laraplug/attribute-module/d/monthly.svg?format=flat-square)](https://packagist.org/packages/laraplug/attribute-module)
+[![Total Downloads](https://poser.pugx.org/laraplug/attribute-module/d/total.svg?format=flat-square)](https://packagist.org/packages/laraplug/attribute-module)
+[![PHP7 Compatible](https://img.shields.io/badge/php-7-green.svg?style=flat-square)](https://packagist.org/packages/laraplug/attribute-module)
+
 # Laraplug Attribute
 
 **Laraplug Attribute** is a EAV e-commerce module, built on top of [AsgardCMS](https://github.com/AsgardCms/Platform) platform.
