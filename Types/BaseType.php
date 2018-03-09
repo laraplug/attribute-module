@@ -37,6 +37,22 @@ abstract class BaseType implements TypeInterface
     /**
      * {@inheritDoc}
      */
+    public function useOptions()
+    {
+        return $this->useOptions;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isCollection()
+    {
+        return $this->isCollection;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
         return trans("attribute::attributes.types.{$this->identifier}");
@@ -58,19 +74,4 @@ abstract class BaseType implements TypeInterface
         return view("attribute::admin.types.translatable.{$this->identifier}", compact('attribute', 'entity', 'locale'));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function useOptions()
-    {
-        return $this->useOptions;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function isCollection()
-    {
-        return $this->isCollection;
-    }
 }

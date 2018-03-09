@@ -44,12 +44,14 @@
             @php
                 $count = 1;
             @endphp
-            @foreach ($options as $value => $option)
+            @if($options)
+              @foreach ($options as $value => $option)
                 @php
-                    $count++;
+                  $count++;
                 @endphp
                 @include('attribute::admin.attributes.partials.option-item', ['count' => $count])
-            @endforeach
+              @endforeach
+            @endif
         </ol>
     </div>
 </div>
