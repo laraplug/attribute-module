@@ -238,7 +238,7 @@ trait Attributable
                     'is_system' => true,
                 ];
                 foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-                    $attributeData[$locale]['name'] = $config->has('name') && Lang::has($config->has('name'), $locale) ? trans($config->has('name'), [], $locale) : $slug;
+                    $attributeData[$locale]['name'] = $config->has('name') && Lang::has($config->get('name'), $locale) ? trans($config->get('name'), [], $locale) : $slug;
                 }
                 $attribute = new Attribute($attributeData);
                 $attribute->save();
