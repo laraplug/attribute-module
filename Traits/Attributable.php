@@ -204,9 +204,9 @@ trait Attributable
     /**
      * {@inheritdoc}
      */
-    public static function getSystemAttributes()
+    public function getSystemAttributes()
     {
-        return isset(static::$systemAttributes) ? collect(static::$systemAttributes) : collect([]);
+        return isset($this->systemAttributes) ? collect($this->systemAttributes) : collect([]);
     }
 
     /**
@@ -214,7 +214,7 @@ trait Attributable
      */
     public function createSystemAttributes()
     {
-        $systemAttributes = $this::getSystemAttributes();
+        $systemAttributes = $this->getSystemAttributes();
         $attributes = $this->attributes()->get()->keyBy('slug');
         $systemAttributeIds = [];
         foreach ($systemAttributes as $slug => $config) {
