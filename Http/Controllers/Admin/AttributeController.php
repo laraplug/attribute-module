@@ -3,10 +3,12 @@
 namespace Modules\Attribute\Http\Controllers\Admin;
 
 use Modules\Attribute\Entities\Attribute;
+use Modules\Attribute\Repositories\AttributesManager;
+use Modules\Attribute\Repositories\AttributablesManager;
+
 use Modules\Attribute\Http\Requests\CreateAttributeRequest;
 use Modules\Attribute\Http\Requests\UpdateAttributeRequest;
 use Modules\Attribute\Repositories\AttributeRepository;
-use Modules\Attribute\Repositories\AttributesManager;
 use Modules\Core\Http\Controllers\Admin\AdminBaseController;
 
 class AttributeController extends AdminBaseController
@@ -19,13 +21,18 @@ class AttributeController extends AdminBaseController
      * @var AttributesManager
      */
     private $attributesManager;
+    /**
+     * @var AttributablesManager
+     */
+    private $attributablesManager;
 
-    public function __construct(AttributeRepository $attribute, AttributesManager $attributesManager)
+    public function __construct(AttributeRepository $attribute, AttributesManager $attributesManager, AttributablesManager $attributablesManager)
     {
         parent::__construct();
 
         $this->attribute = $attribute;
         $this->attributesManager = $attributesManager;
+        $this->attributablesManager = $attributablesManager;
     }
 
     /**
@@ -47,10 +54,10 @@ class AttributeController extends AdminBaseController
      */
     public function create()
     {
-        $namespaces = $this->formatNamespaces($this->attributesManager->getEntities());
-        $types = $this->attributesManager->getTypes();
+        $attributables = $this->formatNamespaces($this->attributablesManager->all());
+        $types = $this->attributesManager->all();
 
-        return view('attribute::admin.attributes.create', compact('namespaces', 'types'));
+        return view('attribute::admin.attributes.create', compact('attributables', 'types'));
     }
 
     /**
@@ -75,10 +82,10 @@ class AttributeController extends AdminBaseController
      */
     public function edit(Attribute $attribute)
     {
-        $namespaces = $this->formatNamespaces($this->attributesManager->getEntities());
-        $types = $this->attributesManager->getTypes();
+        $attributables = $this->formatNamespaces($this->attributablesManager->all());
+        $types = $this->attributesManager->all();
 
-        return view('attribute::admin.attributes.edit', compact('attribute', 'namespaces', 'types'));
+        return view('attribute::admin.attributes.edit', compact('attribute', 'attributables', 'types'));
     }
 
     /**
@@ -110,7 +117,7 @@ class AttributeController extends AdminBaseController
             ->withSuccess(trans('core::core.messages.resource deleted', ['name' => trans('attribute::attributes.attributes')]));
     }
 
-    private function formatNamespaces(array $entities)
+    private function formatNamespaces($entities)
     {
         $new = [];
         foreach ($entities as $namespace => $entity) {

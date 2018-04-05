@@ -2,14 +2,14 @@
 
 namespace Modules\Attribute\Tests;
 
-use Modules\Attribute\Contracts\AttributesInterface;
-use Modules\Attribute\Repositories\AttributesManagerRepository;
+use Modules\Attribute\Contracts\AttributableInterface;
+use Modules\Attribute\Repositories\AttributablesManagerRepository;
 use Modules\Attribute\Types\InputType;
 
-final class AttributesManagerRepositoryTest extends BaseTestCase
+final class AttributablesManagerRepositoryTest extends BaseTestCase
 {
     /**
-     * @var AttributesManagerRepository
+     * @var AttributablesManagerRepository
      */
     private $attributesManager;
 
@@ -17,7 +17,7 @@ final class AttributesManagerRepositoryTest extends BaseTestCase
     {
         parent::setUp();
 
-        $this->attributesManager = new AttributesManagerRepository();
+        $this->attributesManager = new AttributablesManagerRepository();
     }
 
     /** @test */
@@ -49,7 +49,7 @@ final class AttributesManagerRepositoryTest extends BaseTestCase
     }
 }
 
-class TestModel implements AttributesInterface
+class TestModel implements AttributableInterface
 {
     use \Modules\Core\Traits\NamespacedEntity;
     protected static $entityNamespace = 'asgardcms/page';

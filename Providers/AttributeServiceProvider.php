@@ -5,18 +5,19 @@ namespace Modules\Attribute\Providers;
 use Illuminate\Support\ServiceProvider;
 use Modules\Attribute\Blade\AttributesDirective;
 use Modules\Attribute\Entities\Attribute;
+use Modules\Attribute\Attributes\InputAttribute;
+use Modules\Attribute\Attributes\RadioAttribute;
+use Modules\Attribute\Attributes\SelectAttribute;
+use Modules\Attribute\Attributes\CheckboxAttribute;
+use Modules\Attribute\Attributes\TextareaAttribute;
 use Modules\Attribute\Normalisers\AttributeOptionsNormaliser;
-use Modules\Attribute\Repositories\AttributeRepository;
 use Modules\Attribute\Repositories\AttributesManager;
+use Modules\Attribute\Repositories\AttributeRepository;
+use Modules\Attribute\Repositories\AttributablesManager;
 use Modules\Attribute\Repositories\AttributesManagerRepository;
+use Modules\Attribute\Repositories\AttributablesManagerRepository;
 use Modules\Attribute\Repositories\Cache\CacheAttributeDecorator;
 use Modules\Attribute\Repositories\Eloquent\EloquentAttributeRepository;
-use Modules\Attribute\Types\CheckboxType;
-use Modules\Attribute\Types\InputType;
-use Modules\Attribute\Types\MultiSelectType;
-use Modules\Attribute\Types\RadioType;
-use Modules\Attribute\Types\SelectType;
-use Modules\Attribute\Types\TextareaType;
 use Modules\Core\Events\LoadingBackendTranslations;
 use Modules\Core\Traits\CanPublishConfiguration;
 
@@ -39,19 +40,18 @@ class AttributeServiceProvider extends ServiceProvider
     {
         $this->registerBindings();
 
-        $this->app[AttributesManager::class]->registerType(new InputType());
-        $this->app[AttributesManager::class]->registerType(new CheckboxType());
-        $this->app[AttributesManager::class]->registerType(new MultiSelectType());
-        $this->app[AttributesManager::class]->registerType(new RadioType());
-        $this->app[AttributesManager::class]->registerType(new SelectType());
-        $this->app[AttributesManager::class]->registerType(new TextareaType());
+        $this->app[AttributesManager::class]->registerEntity(new InputAttribute());
+        $this->app[AttributesManager::class]->registerEntity(new CheckboxAttribute());
+        $this->app[AttributesManager::class]->registerEntity(new RadioAttribute());
+        $this->app[AttributesManager::class]->registerEntity(new SelectAttribute());
+        $this->app[AttributesManager::class]->registerEntity(new TextareaAttribute());
 
         $this->app->singleton('options.normaliser', function () {
             return new AttributeOptionsNormaliser();
         });
 
         $this->app->bind('attribute.attributes.directive', function ($app) {
-            return new AttributesDirective($app[AttributeRepository::class], $app[AttributesManager::class]);
+            return new AttributesDirective($app[AttributeRepository::class], $app[AttributablesManager::class]);
         });
 
         $this->app['events']->listen(LoadingBackendTranslations::class, function (LoadingBackendTranslations $event) {
@@ -80,6 +80,12 @@ class AttributeServiceProvider extends ServiceProvider
 
     private function registerBindings()
     {
+        $this->app->singleton(AttributesManager::class, function () {
+            return new AttributesManagerRepository();
+        });
+        $this->app->singleton(AttributablesManager::class, function () {
+            return new AttributablesManagerRepository();
+        });
         $this->app->bind(AttributeRepository::class, function () {
             $repository = new EloquentAttributeRepository(new Attribute());
 
@@ -90,9 +96,6 @@ class AttributeServiceProvider extends ServiceProvider
             return new CacheAttributeDecorator($repository);
         });
 
-        $this->app->singleton(AttributesManager::class, function () {
-            return new AttributesManagerRepository();
-        });
     }
 
     private function registerBladeTags()

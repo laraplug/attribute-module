@@ -2,10 +2,11 @@
 
 namespace Modules\Attribute\Repositories;
 
-use Modules\Attribute\Contracts\AttributesInterface;
-use Modules\Attribute\Contracts\TypeInterface;
 use Modules\Attribute\Entities\Attribute;
 
+/**
+ * @inheritDoc
+ */
 final class AttributesManagerRepository implements AttributesManager
 {
     /**
@@ -13,68 +14,33 @@ final class AttributesManagerRepository implements AttributesManager
      */
     private $entities = [];
 
-    /**
-     * @var array
-     */
-    private $types = [];
-
-    public function getNamespaces()
-    {
-        return array_keys($this->entities);
-    }
-
-    public function getEntities()
+    public function all()
     {
         return $this->entities;
     }
 
     /**
-     * Registers an entity namespace.
-     * @param AttributesInterface $entity
-     * @return void
+     * @inheritDoc
      */
-    public function registerEntity(AttributesInterface $entity)
+    public function registerEntity(Attribute $entity)
     {
-        $this->entities[$entity->getEntityNamespace()] = $entity;
+        $this->entities[$entity->type] = $entity;
     }
 
     /**
-     * Return all registered types
-     * @return array
+     * @inheritDoc
      */
-    public function getTypes()
+    public function findByNamespace(string $entityNamespace)
     {
-        return $this->types;
+        return array_get($this->entities, $entityNamespace, null);
     }
 
     /**
-     * @param TypeInterface $type
-     * @return void
+     * @inheritDoc
      */
-    public function registerType(TypeInterface $type)
+    public function first()
     {
-        $this->types[$type->getIdentifier()] = $type;
+        return collect($this->entities)->first();
     }
 
-    /**
-     * @param Attribute $attribute
-     * @param AttributesInterface $entity
-     * @return string
-     */
-    public function getEntityFormField(Attribute $attribute, AttributesInterface $entity)
-    {
-        return $this->types[$attribute->type]->getEntityFormField($attribute, $entity);
-    }
-
-    /**
-     * Returns the HTML for creating / editing an entity that has translatable values.
-     * @param Attribute $attribute
-     * @param AttributesInterface $entity
-     * @param string $locale
-     * @return string
-     */
-    public function getTranslatableEntityFormField(Attribute $attribute, AttributesInterface $entity, $locale)
-    {
-        return $this->types[$attribute->type]->getTranslatableEntityFormField($attribute, $entity, $locale);
-    }
 }

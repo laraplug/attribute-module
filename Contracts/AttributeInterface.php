@@ -2,45 +2,38 @@
 
 namespace Modules\Attribute\Contracts;
 
-use Modules\Attribute\Entities\Attribute;
-
-interface TypeInterface
+interface AttributeInterface
 {
-    /**
-     * Returns the type identifier.
-     * @return string
-     */
-    public function getIdentifier();
 
     /**
      * Returns a human friendly name for the type.
      * @return string
      */
-    public function getName();
+    public function getTypeName();
 
     /**
      * Returns the HTML for creating / editing an entity.
      * @param Attribute $attribute
-     * @param AttributesInterface $entity
+     * @param AttributableInterface $entity
      * @return string
      */
-    public function getEntityFormField(Attribute $attribute, AttributesInterface $entity);
+    public function getFormField(AttributableInterface $entity);
 
     /**
      * Returns the HTML for creating / editing an entity that has translatable values.
      * @param Attribute $attribute
-     * @param AttributesInterface $entity
+     * @param AttributableInterface $entity
      * @param string $locale
      * @return string
      */
-    public function getTranslatableEntityFormField(Attribute $attribute, AttributesInterface $entity, $locale);
+    public function getTranslatableFormField(AttributableInterface $entity, $locale);
 
     /**
      * Returns boolean for whether the type allows to use options.
      * @return bool
      */
     public function useOptions();
-    
+
     /**
      * Returns boolean for whether the type is collection.
      * @return bool

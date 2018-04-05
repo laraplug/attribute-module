@@ -2,43 +2,17 @@
 
 namespace Modules\Attribute\Traits;
 
-use Illuminate\Support\Facades\Lang;
+use Modules\Attribute\Entities\Attributable;
 
-use Illuminate\Database\Eloquent\Model;
+use Modules\Attribute\Repositories\AttributesManager;
+
+use Illuminate\Support\Facades\Lang;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Attribute\Entities\Attribute;
 use Modules\Attribute\Entities\AttributeValue;
 
-trait Attributable
+trait AttributableTrait
 {
-    /**
-     * @var Model
-     */
-    protected static $attributesModel = Attribute::class;
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function getAttributesModel()
-    {
-        return static::$attributesModel;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function setAttributesModel($model)
-    {
-        static::$attributesModel = $model;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function createAttributesModel()
-    {
-        return new static::$attributesModel;
-    }
 
     /**
      * @inheritDoc
@@ -53,7 +27,8 @@ trait Attributable
      */
     public function attributes()
     {
-        return $this->hasMany(static::$attributesModel, 'namespace', 'type')
+        $pivotTable = (new Attributable())->getTable();
+        return $this->belongsToMany(Attribute::class, $pivotTable, 'entity_type', 'attribute_id', 'type', 'id')
                 ->with(['values' => function($query) {
                     $query->where('entity_type', static::class);
                     $query->where('entity_id', static::getKey());
@@ -215,24 +190,28 @@ trait Attributable
     public function createSystemAttributes()
     {
         $systemAttributes = $this->getSystemAttributes();
-        $attributes = $this->attributes()->get()->keyBy('slug');
         $systemAttributeIds = [];
         foreach ($systemAttributes as $slug => $config) {
             $config = collect($config);
             if(!$slug || !$config->has('type')) continue;
+
+            $attributeType = app(AttributesManager::class)->findByNamespace($config->get('type'));
+            if(!$attributeType) continue;
+
+            $attribute = Attribute::where([
+                'type' => $attributeType->type,
+                'slug' => $slug
+            ])->first();
             // If attributes is not in database
-            if(isset($attributes[$slug])) {
-                $attribute = $attributes[$slug];
-                $attribute->type = $config->get('type');
+            if($attribute) {
                 $attribute->has_translatable_values = $config->get('has_translatable_values', false);
                 $attribute->save();
             }
             else {
                 // Create Attribute based on system attribustes
                 $attributeData = [
-                    'namespace' => $this->getEntityNamespace(),
+                    'type' => $attributeType->type,
                     'slug' => $slug,
-                    'type' => $config->get('type'),
                     'has_translatable_values' => $config->get('has_translatable_values', false),
                     'is_enabled' => true,
                     'is_system' => true,
@@ -243,6 +222,8 @@ trait Attributable
                 $attribute = new Attribute($attributeData);
                 $attribute->save();
             }
+            // Attach model to attribute
+            $attribute->attributables()->updateOrCreate(['entity_type'=>$this->getEntityNamespace()]);
 
             // Save Options
             if(is_array($config->get('options'))) {
@@ -256,7 +237,7 @@ trait Attributable
                         $optionData[$key][$locale]['label'] = Lang::has($label, $locale) ? trans($label, [], $locale) : $label;
                     }
                 }
-                $attribute->setOptions($optionData);
+                $attribute->options = $optionData;
             }
             $systemAttributeIds[] = $attribute->getKey();
         }

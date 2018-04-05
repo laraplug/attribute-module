@@ -2,26 +2,26 @@
 
 namespace Modules\Attribute\Repositories;
 
-use Modules\Attribute\Entities\Attribute;
+use Modules\Attribute\Contracts\AttributableInterface;
 
 /**
- * 속성관리자
+ * 속성대상 관리자
  */
-interface AttributesManager
+interface AttributablesManager
 {
-
+    
     /**
-     * Returns all the registered entity
+     * Returns all the registered entity.
      * @return array
      */
     public function all();
 
     /**
      * Registers an entity namespace.
-     * @param Attribute $entity
+     * @param AttributableInterface $entity
      * @return void
      */
-    public function registerEntity(Attribute $entity);
+    public function registerEntity(AttributableInterface $entity);
 
     /**
      * 네임스페이스로 검색
@@ -30,12 +30,5 @@ interface AttributesManager
      * @return mixed
      */
     public function findByNamespace(string $namespace);
-
-    /**
-     * 첫번째 엔티티를 리턴
-     *
-     * @return mixed
-     */
-    public function first();
 
 }

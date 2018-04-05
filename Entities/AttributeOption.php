@@ -5,7 +5,7 @@ namespace Modules\Attribute\Entities;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 
-final class AttributeOption extends Model
+class AttributeOption extends Model
 {
     use Translatable;
 

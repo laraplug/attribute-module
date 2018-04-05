@@ -3,18 +3,18 @@
 namespace Modules\Attribute\Blade;
 
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Modules\Attribute\Contracts\AttributesInterface;
+use Modules\Attribute\Contracts\AttributableInterface;
 use Modules\Attribute\Repositories\AttributeRepository;
-use Modules\Attribute\Repositories\AttributesManager;
+use Modules\Attribute\Repositories\AttributablesManager;
 
 final class AttributesDirective
 {
     /**
      * @var string
      */
-    private $namespace;
+    private $attributable;
     /**
-     * @var AttributesInterface
+     * @var AttributableInterface
      */
     private $entity;
     /**
@@ -22,14 +22,14 @@ final class AttributesDirective
      */
     private $attribute;
     /**
-     * @var AttributesManager
+     * @var AttributablesManager
      */
-    private $attributesManager;
+    private $attributablesManager;
 
-    public function __construct(AttributeRepository $attribute, AttributesManager $attributesManager)
+    public function __construct(AttributeRepository $attribute, AttributablesManager $attributablesManager)
     {
         $this->attribute = $attribute;
-        $this->attributesManager = $attributesManager;
+        $this->attributablesManager = $attributablesManager;
     }
 
     public function show($arguments)
@@ -38,7 +38,9 @@ final class AttributesDirective
 
         $this->entity->createSystemAttributes();
 
-        $attributes = $this->attribute->findByNamespace($this->namespace);
+        $attributable = $this->attributablesManager->findByNamespace($this->attributable);
+
+        $attributes = $attributable->attributes()->get();
 
         return $this->renderForm($this->entity, $attributes);
     }
@@ -49,13 +51,13 @@ final class AttributesDirective
      */
     private function extractArguments(array $arguments)
     {
-        $this->namespace = array_get($arguments, 0);
+        $this->attributable = array_get($arguments, 0);
         $this->entity = array_get($arguments, 1);
     }
 
-    private function renderForm(AttributesInterface $entity, $attributes = [], $view = null)
+    private function renderForm(AttributableInterface $entity, $attributes = [], $view = null)
     {
-        $namespace = $this->namespace;
+        $attributable = $this->attributable;
         $view = $view ?: 'attribute::admin.blade.form';
 
         $form = '';
@@ -65,14 +67,14 @@ final class AttributesDirective
         $translatableAttributes = $attributes->where('has_translatable_values', true);
 
         foreach ($normalAttributes as $attribute) {
-            $form .= $this->attributesManager->getEntityFormField($attribute, $entity);
+            $form .= $attribute->getFormField($entity);
         }
 
         foreach ($translatableAttributes as $attribute) {
             foreach(LaravelLocalization::getSupportedLanguagesKeys() as $i => $locale) {
                 $active = locale() == $locale ? 'active' : '';
                 $translatableForm .= "<div class='tab-pane $active' id='tab_attributes_$i'>";
-                $translatableForm .= $this->attributesManager->getTranslatableEntityFormField($attribute, $entity, $locale);
+                $translatableForm .= $attribute->getTranslatableFormField($entity, $locale);
                 $translatableForm .= '</div>';
             }
         }
