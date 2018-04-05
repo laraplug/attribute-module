@@ -28,4 +28,18 @@ class AttributeOption extends Model
         return $this->hasTranslation($locale) ? $this->translate($locale)->label : $this->key;
     }
 
+
+    /**
+     * @inheritDoc
+     */
+    public function getForeignKey()
+    {
+        return 'attribute_option_id';
+    }
+
+    /**
+     * @var string
+     */
+    protected $translationModel = AttributeOptionTranslation::class;
+
 }
