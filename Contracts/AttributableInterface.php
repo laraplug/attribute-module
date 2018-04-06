@@ -2,7 +2,7 @@
 
 namespace Modules\Attribute\Contracts;
 
-interface AttributesInterface
+interface AttributableInterface
 {
     /**
      * The Eloquent attribute entity name.

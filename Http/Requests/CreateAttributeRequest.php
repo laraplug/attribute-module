@@ -4,13 +4,16 @@ namespace Modules\Attribute\Http\Requests;
 
 use Modules\Core\Internationalisation\BaseFormRequest;
 
+use Modules\Attribute\Entities\Attribute;
+
 final class CreateAttributeRequest extends BaseFormRequest
 {
     public function rules()
     {
+        $attributeTable = (new Attribute())->getTable();
         return [
-            'namespace' => 'required',
-            'slug' => 'required|unique:attribute__attributes,slug,NULL,id,namespace,'.$this->get('namespace'),
+            'attributables' => 'required|array',
+            'slug' => 'required|unique:'.$attributeTable.',slug',
             'type' => 'required',
         ];
     }

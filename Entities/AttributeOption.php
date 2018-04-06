@@ -5,7 +5,7 @@ namespace Modules\Attribute\Entities;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 
-final class AttributeOption extends Model
+class AttributeOption extends Model
 {
     use Translatable;
 
@@ -27,5 +27,19 @@ final class AttributeOption extends Model
         $locale = $locale ? $locale : locale();
         return $this->hasTranslation($locale) ? $this->translate($locale)->label : $this->key;
     }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getForeignKey()
+    {
+        return 'attribute_option_id';
+    }
+
+    /**
+     * @var string
+     */
+    protected $translationModel = AttributeOptionTranslation::class;
 
 }

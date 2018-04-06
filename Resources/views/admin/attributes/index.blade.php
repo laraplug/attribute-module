@@ -28,7 +28,7 @@
                     <table class="data-table table table-bordered table-hover">
                         <thead>
                         <tr>
-                            <th width="10%">{{ trans('attribute::attributes.namespace') }}</th>
+                            <th width="10%">{{ trans('attribute::attributes.apply to') }}</th>
                             <th width="10%">{{ trans('attribute::attributes.slug') }}</th>
                             <th width="20%">{{ trans('attribute::attributes.name') }}</th>
                             <th width="10%">{{ trans('attribute::attributes.type') }}</th>
@@ -42,9 +42,9 @@
                         <?php foreach ($attributes as $attribute): ?>
                         <tr>
                             <td>
-                                <a href="{{ route('admin.attribute.attribute.edit', [$attribute->id]) }}">
-                                    {{ $attribute->getEntityName() }}
-                                </a>
+                                @foreach ($attribute->attributables as $attributable)
+                                    <p>{{ $attributable->name }}</p>
+                                @endforeach
                             </td>
                             <td>
                                 <a href="{{ route('admin.attribute.attribute.edit', [$attribute->id]) }}">

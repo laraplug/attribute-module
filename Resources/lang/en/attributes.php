@@ -14,7 +14,7 @@ return [
     'description' => 'Description',
     'is_enabled' => 'Enabled',
     'is_system' => 'System',
-    'namespace' => 'Namespace',
+    'apply to' => 'Apply To',
     'configuration' => 'Configuration',
     'type' => 'Type',
     'has_translatable_values' => 'Has translatable values',
@@ -22,6 +22,7 @@ return [
     'select a type' => 'Select a type ...',
     'option label' => 'Option label',
     'option value' => 'Option value',
+    'options' => 'Options',
     'types' => [
         'checkbox' => 'Checkbox',
         'input' => 'Input',

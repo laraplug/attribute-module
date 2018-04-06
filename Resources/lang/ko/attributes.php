@@ -14,7 +14,7 @@ return [
     'description' => '설명',
     'is_enabled' => '활성화',
     'is_system' => '시스템',
-    'namespace' => '대상',
+    'apply to' => '적용 대상',
     'configuration' => '설정',
     'type' => '입력타입',
     'has_translatable_values' => '번역 가능한 값이 있음',
@@ -22,6 +22,7 @@ return [
     'select a type' => '타입을 선택하세요...',
     'option label' => '옵션 라벨',
     'option value' => '옵션 값',
+    'options' => '옵션',
     'types' => [
         'checkbox' => '체크박스 (Checkbox)',
         'input' => '일반 텍스트 (Input)',

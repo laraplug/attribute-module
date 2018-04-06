@@ -51,10 +51,10 @@
                 <div class="box-body">
                     {!! Form::normalCheckbox('is_enabled', trans('attribute::attributes.is_enabled'), $errors, (object)['is_enabled'=>true]) !!}
                     {!! Form::normalInput('slug', trans('attribute::attributes.slug'), $errors, null, ['ng-model'=>'slug','slug-only']) !!}
-                    <div class="form-group {{ $errors->has('namespace') ? 'has-error' : '' }}">
-                        {!! Form::label('namespace', trans('attribute::attributes.namespace')) !!}
-                        {!! Form::select('namespace', $namespaces, old('namespace') , ['class' => 'selectize']) !!}
-                        {!! $errors->first('namespace', '<span class="help-block">:message</span>') !!}
+                    <div class="form-group {{ $errors->has('attributables') ? 'has-error' : '' }}">
+                        {!! Form::label('attributables', trans('attribute::attributes.apply to')) !!}
+                        {!! Form::select('attributables[]', $attributables, old('attributables') , ['class' => 'selectize', 'multiple']) !!}
+                        {!! $errors->first('attributables', '<span class="help-block">:message</span>') !!}
                     </div>
                 </div>
             </div>
@@ -73,10 +73,10 @@
                                 {!! Form::label('type', trans('attribute::attributes.type')) !!}
                                 <select class="form-control jsTypeSelection" name="type" id="type">
                                     <option value="">{{ trans('attribute::attributes.select a type') }}</option>
-                                    @foreach ($types as $type)
-                                        <option data-use-options="{{ $type->useOptions() }}"
-                                                {{ old('type') === $type->getIdentifier() ? 'selected' : null }}
-                                                value="{{ $type->getIdentifier() }}">{{  $type->getName() }}</option>
+                                    @foreach ($types as $entity)
+                                        <option data-use-options="{{ $entity->useOptions() }}"
+                                                {{ old('type') === $entity->type ? 'selected' : null }}
+                                                value="{{ $entity->type }}">{{  $entity->getTypeName() }}</option>
                                     @endforeach
                                 </select>
                                 {!! $errors->first('type', '<span class="help-block">:message</span>') !!}

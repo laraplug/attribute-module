@@ -16,7 +16,7 @@ class EloquentAttributeRepository extends EloquentBaseRepository implements Attr
 
         $attribute = $this->model->create($data);
 
-        $attribute->setOptions(array_get($data,'options',[]));
+        $attribute->attributables = array_get($data,'attributables',[]);
 
         return $attribute;
     }
@@ -29,22 +29,9 @@ class EloquentAttributeRepository extends EloquentBaseRepository implements Attr
 
         $attribute->update($data);
 
-        $attribute->setOptions(array_get($data,'options',[]));
+        $attribute->attributables = array_get($data,'attributables',[]);
 
         return $attribute;
-    }
-
-    /**
-     * Find all enabled attributes by the given namespace
-     * @param string $namespace
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function findByNamespace($namespace)
-    {
-        return $this->model
-            ->where('is_enabled', true)
-            ->where('namespace', $namespace)
-            ->with('translations')->get();
     }
 
 }
