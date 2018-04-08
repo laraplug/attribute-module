@@ -6,6 +6,12 @@ interface AttributeInterface
 {
 
     /**
+     * Returns a key for the type.
+     * @return string
+     */
+    public function getTypeAttribute();
+
+    /**
      * Returns a human friendly name for the type.
      * @return string
      */

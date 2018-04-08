@@ -1,13 +1,13 @@
 <div class="form-group {{ $errors->has('attributes.' . $attribute->slug) ? 'has-error' : '' }}">
     {!! Form::label($attribute->name, $attribute->name) !!}
 
-    <?php foreach ($attribute->options as $key => $option): ?>
+    <?php foreach ($attribute->options as $option): ?>
     <label class="radio">
         <input type="radio" name="attributes[{{ $attribute->slug }}]"
                 class="flat-blue"
                 data-slug="{{ $attribute->slug }}"
                 data-is-collection="{{ $attribute->isCollection() }}"
-                value="{{ $key }}" {{ $entity->findAttributeValue($attribute->slug, $key) ? 'checked' : '' }}>
+                value="{{ $option->code }}" {{ $entity->findAttributeValue($attribute->slug, $option->code) ? 'checked' : '' }}>
         {{ $option->getLabel() }}
     </label>
     <?php endforeach; ?>

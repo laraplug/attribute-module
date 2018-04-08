@@ -5,11 +5,11 @@ namespace Modules\Attribute\Providers;
 use Illuminate\Support\ServiceProvider;
 use Modules\Attribute\Blade\AttributesDirective;
 use Modules\Attribute\Entities\Attribute;
-use Modules\Attribute\Attributes\InputAttribute;
-use Modules\Attribute\Attributes\RadioAttribute;
-use Modules\Attribute\Attributes\SelectAttribute;
-use Modules\Attribute\Attributes\CheckboxAttribute;
-use Modules\Attribute\Attributes\TextareaAttribute;
+use Modules\Attribute\Attributes\Radio;
+use Modules\Attribute\Attributes\Select;
+use Modules\Attribute\Attributes\Checkbox;
+use Modules\Attribute\Attributes\Textarea;
+use Modules\Attribute\Attributes\InputText;
 use Modules\Attribute\Normalisers\AttributeOptionsNormaliser;
 use Modules\Attribute\Repositories\AttributesManager;
 use Modules\Attribute\Repositories\AttributeRepository;
@@ -40,11 +40,11 @@ class AttributeServiceProvider extends ServiceProvider
     {
         $this->registerBindings();
 
-        $this->app[AttributesManager::class]->registerEntity(new InputAttribute());
-        $this->app[AttributesManager::class]->registerEntity(new CheckboxAttribute());
-        $this->app[AttributesManager::class]->registerEntity(new RadioAttribute());
-        $this->app[AttributesManager::class]->registerEntity(new SelectAttribute());
-        $this->app[AttributesManager::class]->registerEntity(new TextareaAttribute());
+        $this->app[AttributesManager::class]->registerEntity(new InputText());
+        $this->app[AttributesManager::class]->registerEntity(new Checkbox());
+        $this->app[AttributesManager::class]->registerEntity(new Radio());
+        $this->app[AttributesManager::class]->registerEntity(new Select());
+        $this->app[AttributesManager::class]->registerEntity(new Textarea());
 
         $this->app->singleton('options.normaliser', function () {
             return new AttributeOptionsNormaliser();

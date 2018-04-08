@@ -4,11 +4,12 @@ namespace Modules\Attribute\Attributes;
 
 use Modules\Attribute\Entities\Attribute;
 
-final class MultiSelectAttribute extends Attribute
+final class Checkbox extends Attribute
 {
-    protected $attributes = [
-        'type' => 'multiselect'
-    ];
+    /**
+     * @var string
+     */
+    protected $entityNamespace = 'checkbox';
 
     /**
      * @inheritDoc
@@ -25,4 +26,5 @@ final class MultiSelectAttribute extends Attribute
     {
         return true;
     }
+
 }

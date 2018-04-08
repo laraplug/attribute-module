@@ -30,9 +30,9 @@ final class AttributesManagerRepository implements AttributesManager
     /**
      * @inheritDoc
      */
-    public function findByNamespace(string $entityNamespace)
+    public function findByNamespace(string $namespace)
     {
-        return array_get($this->entities, $entityNamespace, null);
+        return array_get($this->entities, $namespace, null);
     }
 
     /**

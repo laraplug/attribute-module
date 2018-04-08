@@ -4,11 +4,12 @@ namespace Modules\Attribute\Attributes;
 
 use Modules\Attribute\Entities\Attribute;
 
-final class SelectAttribute extends Attribute
+final class Select extends Attribute
 {
-    protected $attributes = [
-        'type' => 'select'
-    ];
+    /**
+     * @var string
+     */
+    protected $entityNamespace = 'select';
 
     /**
      * @inheritDoc

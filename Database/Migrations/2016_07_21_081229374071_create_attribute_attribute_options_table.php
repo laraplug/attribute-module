@@ -18,12 +18,12 @@ class CreateAttributeAttributeOptionsTable extends Migration
             $table->increments('id');
 
             $table->integer('attribute_id')->unsigned();
-            $table->string('key');
+            $table->string('code');
             $table->timestamps();
 
             $table->index('attribute_id');
-            $table->index('key');
-            $table->unique(['attribute_id', 'key']);
+            $table->index('code');
+            $table->unique(['attribute_id', 'code']);
             $table->foreign('attribute_id')->references('id')->on('attribute__attributes')->onDelete('cascade');
         });
 

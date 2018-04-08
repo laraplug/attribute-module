@@ -4,11 +4,12 @@ namespace Modules\Attribute\Attributes;
 
 use Modules\Attribute\Entities\Attribute;
 
-final class RadioAttribute extends Attribute
+final class Radio extends Attribute
 {
-    protected $attributes = [
-        'type' => 'radio'
-    ];
+    /**
+     * @var string
+     */
+    protected $entityNamespace = 'radio';
 
     /**
      * @inheritDoc

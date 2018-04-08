@@ -14,7 +14,7 @@ class AttributeOption extends Model
         'label'
     ];
     protected $fillable = [
-        'key'
+        'code'
     ];
 
     public function attribute()
@@ -25,7 +25,7 @@ class AttributeOption extends Model
     public function getLabel($locale = null)
     {
         $locale = $locale ? $locale : locale();
-        return $this->hasTranslation($locale) ? $this->translate($locale)->label : $this->key;
+        return $this->hasTranslation($locale) ? $this->translate($locale)->label : $this->code;
     }
 
 

@@ -205,7 +205,6 @@ trait AttributableTrait
             // If attributes is not in database
             if($attribute) {
                 $attribute->has_translatable_values = $config->get('has_translatable_values', false);
-                $attribute->save();
             }
             else {
                 // Create Attribute based on system attribustes
@@ -220,25 +219,27 @@ trait AttributableTrait
                     $attributeData[$locale]['name'] = $config->has('name') && Lang::has($config->get('name'), $locale) ? trans($config->get('name'), [], $locale) : $slug;
                 }
                 $attribute = new Attribute($attributeData);
-                $attribute->save();
             }
-            // Attach model to attribute
-            $attribute->attributables()->updateOrCreate(['entity_type'=>$this->getEntityNamespace()]);
 
-            // Save Options
+            // Set Options
             if(is_array($config->get('options'))) {
                 $optionData = [];
-                $options = $attribute->options->keyBy('slug');
-                foreach ($config->get('options') as $key => $label) {
-                    if(is_int($key)) $key = $label;
+                $options = $attribute->options->keyBy('code');
+                foreach ($config->get('options') as $code => $label) {
+                    if(is_int($code)) $code = $label;
                     // Don't save if exists
-                    if(isset($options[$key])) continue;
+                    if(isset($options[$code])) continue;
                     foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-                        $optionData[$key][$locale]['label'] = Lang::has($label, $locale) ? trans($label, [], $locale) : $label;
+                        $optionData[$code][$locale]['label'] = Lang::has($label, $locale) ? trans($label, [], $locale) : $label;
                     }
                 }
                 $attribute->options = $optionData;
             }
+            // Save it to database
+            $attribute->save();
+            // Attach model to attribute
+            $attribute->attributables()->updateOrCreate(['entity_type'=>$this->getEntityNamespace()]);
+
             $systemAttributeIds[] = $attribute->getKey();
         }
         $this->attributes()->whereNotIn('id', $systemAttributeIds)->update(['is_system'=>false]);

@@ -43,34 +43,37 @@ class Attribute extends Model implements AttributeInterface
     }
 
     /**
-     * @param $options
+     * @param array $options
      */
     public function setOptionsAttribute($options)
     {
-        $inserted_ids = [];
-        foreach ($options as $key => $values) {
-            if($key) {
-                $values['key'] = $key;
-                $option = $this->options()->where('key', $key)->first();
-                if($option) {
-                    $option->fill($values);
-                    $option->save();
+        static::saved(function ($model) use ($options) {
+            $savedIds = [];
+            foreach ($options as $code => $data) {
+                if (empty(array_filter($data))) {
+                    continue;
                 }
-                else $option = $this->options()->create($values);
-                $inserted_ids[] = $option->getKey();
+                if(empty($data['code'])) $data['code'] = $code;
+                // Create option or enable it if exists
+                $option = $this->options()->updateOrCreate([
+                    'code' => $data['code']
+                ], $data);
+                $savedIds[] = $option->id;
             }
-        }
-
-        $this->options()->whereNotIn('id', $inserted_ids)->delete();
+            
+            if(!empty($savedIds)) {
+                $this->options()->whereNotIn('id', $savedIds)->delete();
+            }
+        });
     }
 
     /**
      * @param array $options
      * @return array|mixed
      */
-    public function getOptionsAttribute($options)
+    public function getOptionsAttribute()
     {
-        return $this->options()->with('translations')->get()->keyBy('key');
+        return $this->options()->with('translations')->get();
     }
 
     /**
@@ -78,16 +81,17 @@ class Attribute extends Model implements AttributeInterface
      */
     public function setAttributablesAttribute($attributables)
     {
-        $inserted_ids = [];
-        foreach ($attributables as $namespace) {
-            $attributable = $this->attributables()->where('entity_type', $namespace)->first();
-            if(!$attributable) {
-                $attributable = $this->attributables()->create(['entity_type'=>$namespace]);
+        static::saved(function ($model) use ($options) {
+            $savedIds = [];
+            foreach ($attributables as $namespace) {
+                $attributable = $this->attributables()->where('entity_type', $namespace)->first();
+                if(!$attributable) {
+                    $attributable = $this->attributables()->create(['entity_type'=>$namespace]);
+                }
+                $savedIds[] = $attributable->getKey();
             }
-            $inserted_ids[] = $attributable->getKey();
-        }
-
-        $this->attributables()->whereNotIn('id', $inserted_ids)->delete();
+            $this->attributables()->whereNotIn('id', $savedIds)->delete();
+        });
     }
 
     /**
@@ -106,6 +110,19 @@ class Attribute extends Model implements AttributeInterface
     public function isCollection()
     {
         return false;
+    }
+
+    /**
+     * @var string
+     */
+    protected $entityNamespace = '';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTypeAttribute()
+    {
+        return $this->entityNamespace;
     }
 
     /**

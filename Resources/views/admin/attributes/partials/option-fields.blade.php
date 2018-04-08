@@ -3,7 +3,7 @@
     // If attribute exists
     if(!$options && isset($attribute)) {
         $options = $attribute->options()->get()->mapWithKeys(function($option) {
-            return [$option->key => $option->getTranslationsArray()];
+            return [$option->code => $option->getTranslationsArray()];
         });
     }
 @endphp
