@@ -34,7 +34,7 @@ class SidebarExtender implements \Maatwebsite\Sidebar\SidebarExtender
         $menu->group(config('asgard.attribute.config.sidebar-group', trans('core::sidebar.content')), function (Group $group) {
             $group->item(trans('attribute::attributes.attributes'), function (Item $item) {
                 $item->icon('fa fa-hashtag');
-                $item->weight(0);
+                $item->weight(20);
                 $item->route('admin.attribute.attribute.index');
                 $item->authorize(
                     $this->auth->hasAccess('attribute.attributes.index')
